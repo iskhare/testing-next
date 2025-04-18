@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signUp } from './supabase';
-import { ensureUserExists, updateUserLogin } from './userService';
-
-export default function Signup() {
+"use client"
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { updateUserLogin, ensureUserExists } from '@/lib/userService';
+import { useAuthStore } from '@/lib/store/auth';
+import { useRouter } from 'next/navigation';
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useRouter();
+  const router = useRouter();
+  const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+  const { login } = useAuthStore();
+
+  useEffect(() => {
+    // Check for message from location state
+    if (location.state?.message) {
+      setMessage(location.state.message);
+    }
+  }, [location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,38 +29,56 @@ export default function Signup() {
     setError(null);
 
     try {
-      // Step 1: Create Supabase Auth account
-      const { data, error } = await signUp(email, password, name);
+      // Step 1: Authenticate with Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({ 
+        email, 
+        password 
+      });
       
       if (error) throw error;
 
       const currentUser = data.user || data.session?.user;
       if (!currentUser) {
-        throw new Error("Signup did not return a valid user. Please try again.");
+        throw new Error("User not found. Please check your credentials.");
       }
       
-      // Step 2: Create custom user record and track login
+      // Step 2: Handle custom user record and login tracking
+      // Try to record everything but don't prevent login if it fails
       try {
-        // First ensure the user exists in our custom table
-        await ensureUserExists(email, name, currentUser.id);
+        // Sync the user record first
+        await ensureUserExists(
+          email, 
+          currentUser.user_metadata?.full_name || '', 
+          currentUser.id
+        );
         
-        // Then try to record the login (non-blocking)
-        try {
-          await updateUserLogin(currentUser.id, email, name);
-        } catch (loginErr) {
-          console.warn('Login recording failed, but continuing:', loginErr);
-        }
+        // Try to record login but don't block if it fails
+        await updateUserLogin(
+          currentUser.id,
+          email, 
+          currentUser.user_metadata?.full_name
+        );
       } catch (userErr) {
-        console.error('Error creating user profile:', userErr);
-        // Still allow signup but show warning
-        setError("Account created, but there was an issue with your user profile. Some features may be limited.");
+        console.error('User profile error:', userErr);
+        // Show warning but don't block login
+        setMessage("Login successful, but there was an issue with your user profile.");
       }
-
-      // Navigate to dashboard regardless
-      navigate('/dashboard');
+      
+      // Update auth store
+      login(
+        {
+          id: currentUser.id,
+          email: currentUser.email || email,
+          name: currentUser.user_metadata?.full_name || ''
+        },
+        data.session?.access_token || ''
+      );
+      
+      // Navigate to dashboard regardless of profile status
+      router.push('/dashboard');
     } catch (err: any) {
-      console.error('Signup error:', err);
-      setError(err.message || "An error occurred during signup.");
+      console.error('Login error:', err);
+      setError(err.message || 'An error occurred during login.');
       setLoading(false);
     }
   };
@@ -62,39 +92,31 @@ export default function Signup() {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-white">
-          Create your account
+          Welcome to Nimbic AI
         </h2>
         <p className="mt-2 text-center text-sm text-gray-300">
-          Already have an account?{' '}
-          <Link to="/login" className="font-medium text-brand-accent hover:text-accent-400">
-            Sign in
+          Don't have an account?{' '}
+          <Link href="/signup" className="font-medium text-brand-accent hover:text-accent-400">
+            Create one
           </Link>
         </p>
       </div>
+
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {message && (
+            <div className="mb-4 p-3 bg-blue-50 text-blue-600 rounded-md text-sm">
+              {message}
+            </div>
+          )}
           {error && (
             <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-md text-sm">
               {error}
             </div>
           )}
+
+          {/* Email/Password Sign In Form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-brand-secondary">
-                Full Name
-              </label>
-              <div className="mt-1">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-brand-accent focus:ring-brand-accent"
-                />
-              </div>
-            </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-brand-secondary">
                 Email address
@@ -102,7 +124,6 @@ export default function Signup() {
               <div className="mt-1">
                 <input
                   id="email"
-                  name="email"
                   type="email"
                   autoComplete="email"
                   required
@@ -112,6 +133,7 @@ export default function Signup() {
                 />
               </div>
             </div>
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-brand-secondary">
                 Password
@@ -119,9 +141,8 @@ export default function Signup() {
               <div className="mt-1">
                 <input
                   id="password"
-                  name="password"
                   type="password"
-                  autoComplete="new-password"
+                  autoComplete="current-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -129,13 +150,14 @@ export default function Signup() {
                 />
               </div>
             </div>
+
             <div>
               <button
                 type="submit"
                 disabled={loading}
                 className="flex w-full justify-center rounded-md bg-brand-accent px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Creating account...' : 'Create account'}
+                {loading ? 'Signing in...' : 'Sign in'}
               </button>
             </div>
           </form>

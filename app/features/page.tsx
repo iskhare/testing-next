@@ -1,5 +1,6 @@
+"use client"
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { 
   BookOpenIcon, 
   Cog6ToothIcon, 
@@ -17,7 +18,7 @@ import {
   CommandLineIcon,
   CpuChipIcon
 } from '@heroicons/react/24/outline';
-import '../styles/animations.css';
+import '@/styles/animations.css';
 
 // Feature categories
 const categories = [
