@@ -1,11 +1,11 @@
-import { supabase } from './supabase';
+import { supabase } from './supabaseClient';
 
 /**
  * Comprehensive user management function
  * - Ensures synchronization between Supabase Auth and custom users table
  * - Handles the peculiar schema with both id and user_id fields
  */
-export const ensureUserExists = async (email, name, authUserId) => {
+export const ensureUserExists = async (email: string, name: string, authUserId: string) => {
   console.log('Ensuring user exists:', { email, authUserId });
   
   try {
@@ -89,7 +89,7 @@ export const ensureUserExists = async (email, name, authUserId) => {
 /**
  * Get user by ID - checks both primary key and auth ID fields
  */
-export const getUserById = async (userId) => {
+export const getUserById = async (userId: string) => {
   // First try to find by primary key
   const { data: userByPrimaryKey, error: pkError } = await supabase
     .from('users')
@@ -122,7 +122,7 @@ export const getUserById = async (userId) => {
 /**
  * Get user by email
  */
-export const getUserByEmail = async (email) => {
+export const getUserByEmail = async (email: string) => {
   const { data, error } = await supabase
     .from('users')
     .select('*')
@@ -140,7 +140,7 @@ export const getUserByEmail = async (email) => {
  * Record a login event
  * Carefully handles the foreign key relationships
  */
-export const updateUserLogin = async (authUserId, email, name) => {
+export const updateUserLogin = async (authUserId: string, email: string, name: string) => {
   try {
     console.log('Recording login for auth user ID:', authUserId);
     

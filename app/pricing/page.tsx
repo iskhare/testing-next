@@ -1,5 +1,6 @@
+"use client"
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { 
   CheckIcon, 
   XMarkIcon,
@@ -11,7 +12,7 @@ import {
   ArrowRightIcon,
   ShieldCheckIcon
 } from '@heroicons/react/24/outline';
-import '../styles/animations.css';
+import '../../styles/animations.css';
 
 interface Feature {
   name: string;
@@ -325,22 +326,22 @@ export default function PricingPage() {
         }`}
       >
         <div className="flex items-center">
-          <Link to="/">
+          <Link href="/">
             <img className="h-10 w-auto" src="/logo.svg" alt="Nimbic AI" />
           </Link>
         </div>
         
         {/* Desktop navigation */}
         <div className="hidden md:flex items-center space-x-8">
-          <Link to="/features" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Features</Link>
-          <Link to="/pricing" className="text-emerald-400 font-medium">Pricing</Link>
-          <Link to="/docs" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Documentation</Link>
+          <Link href="/features" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Features</Link>
+          <Link href="/pricing" className="text-emerald-400 font-medium">Pricing</Link>
+          <Link href="/docs" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Documentation</Link>
         </div>
         
         {/* Sign in button */}
         <div className="flex items-center gap-4">
           <Link 
-            to="/login"
+            href="/login"
             className="rounded-md bg-white/10 px-6 py-2 text-sm font-medium text-white hover:bg-emerald-500/80 transition-all duration-300 border border-white/10 hover:border-emerald-500/50 shadow-sm hover:shadow-emerald-500/20 hover:shadow-md flex items-center space-x-1 group"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -364,9 +365,9 @@ export default function PricingPage() {
       {/* Mobile menu */}
       <div className={`fixed top-16 inset-x-0 z-40 bg-gray-900/95 backdrop-blur-md shadow-lg transition-transform duration-300 transform ${mobileMenuOpen ? 'translate-y-0' : '-translate-y-full'} md:hidden`}>
         <div className="p-4 space-y-4">
-          <Link to="/features" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Features</Link>
-          <Link to="/pricing" className="block text-emerald-400 py-2 text-lg font-medium">Pricing</Link>
-          <Link to="/docs" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Documentation</Link>
+          <Link href="/features" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Features</Link>
+          <Link href="/pricing" className="block text-emerald-400 py-2 text-lg font-medium">Pricing</Link>
+          <Link href="/docs" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Documentation</Link>
         </div>
       </div>
 
@@ -466,7 +467,7 @@ export default function PricingPage() {
               </ul>
               
               <Link
-                to="/signup?plan=starter"
+                href="/signup?plan=starter"
                 className="mt-auto block w-full rounded-md bg-white/10 py-3 text-center text-sm font-semibold text-white hover:bg-emerald-500/80 transition-colors duration-300 border border-white/10 hover:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               >
                 Get started
@@ -523,7 +524,7 @@ export default function PricingPage() {
               </ul>
               
               <Link
-                to="/signup?plan=pro"
+                href="/signup?plan=pro"
                 className="mt-auto block w-full rounded-md bg-emerald-500 py-3 text-center text-sm font-semibold text-white hover:bg-emerald-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               >
                 Get started
@@ -574,7 +575,7 @@ export default function PricingPage() {
               </ul>
               
               <Link
-                to="/signup?plan=team"
+                href="/signup?plan=team"
                 className="mt-auto block w-full rounded-md bg-white/10 py-3 text-center text-sm font-semibold text-white hover:bg-emerald-500/80 transition-colors duration-300 border border-white/10 hover:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               >
                 Get started
@@ -624,7 +625,7 @@ export default function PricingPage() {
               </ul>
               
               <Link
-                to="/contact-sales"
+                href="/contact-sales"
                 className="mt-auto block w-full rounded-md bg-white/10 py-3 text-center text-sm font-semibold text-white hover:bg-emerald-500/80 transition-colors duration-300 border border-white/10 hover:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               >
                 Contact Sales
@@ -755,7 +756,7 @@ export default function PricingPage() {
                 Custom pricing based on your organization's size and needs
               </p>
               <Link
-                to="/contact-sales"
+                href="/contact-sales"
                 className="mt-8 block w-full rounded-md bg-emerald-500 py-3 text-center text-sm font-semibold text-white hover:bg-emerald-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               >
                 Contact Sales
@@ -787,7 +788,7 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="xl:grid xl:grid-cols-2 xl:gap-8">
             <div className="space-y-8">
-              <Link to="/">
+              <Link href="/">
                 <img className="h-10" src="/logo.svg" alt="Nimbic AI" />
               </Link>
               <p className="text-sm leading-6 text-gray-400">

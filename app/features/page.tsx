@@ -492,22 +492,22 @@ export default function FeaturesPage() {
         }`}
       >
         <div className="flex items-center">
-          <Link to="/">
+          <Link href="/">
             <img className="h-10 w-auto" src="/logo.svg" alt="Nimbic AI" />
           </Link>
         </div>
         
         {/* Desktop navigation */}
         <div className="hidden md:flex items-center space-x-8">
-          <Link to="/features" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Features</Link>
-          <Link to="/pricing" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Pricing</Link>
-          <Link to="/docs" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Documentation</Link>
+          <Link href="/features" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Features</Link>
+          <Link href="/pricing" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Pricing</Link>
+          <Link href="/docs" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm font-medium">Documentation</Link>
         </div>
         
         {/* Sign in button */}
         <div className="flex items-center gap-4">
           <Link 
-            to="/login"
+            href="/login"
             className="rounded-md bg-white/10 px-6 py-2 text-sm font-medium text-white hover:bg-emerald-500/80 transition-all duration-300 border border-white/10 hover:border-emerald-500/50 shadow-sm hover:shadow-emerald-500/20 hover:shadow-md flex items-center space-x-1 group"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -531,9 +531,9 @@ export default function FeaturesPage() {
       {/* Mobile menu */}
       <div className={`fixed top-16 inset-x-0 z-40 bg-gray-900/95 backdrop-blur-md shadow-lg transition-transform duration-300 transform ${mobileMenuOpen ? 'translate-y-0' : '-translate-y-full'} md:hidden`}>
         <div className="p-4 space-y-4">
-          <Link to="/features" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Features</Link>
-          <Link to="/pricing" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Pricing</Link>
-          <Link to="/docs" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Documentation</Link>
+          <Link href="/features" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Features</Link>
+          <Link href="/pricing" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Pricing</Link>
+          <Link href="/docs" className="block text-gray-300 hover:text-emerald-400 transition-colors py-2 text-lg font-medium">Documentation</Link>
         </div>
       </div>
 
@@ -722,7 +722,7 @@ export default function FeaturesPage() {
                       </span>
                     ))}
                   </div>
-                  <Link to={useCase.link} className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors inline-flex items-center">
+                  <Link href={useCase.link} className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors inline-flex items-center">
                     <span>Learn more</span>
                     <svg className="ml-1 h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -874,13 +874,13 @@ export default function FeaturesPage() {
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
-                to="/signup"
+                href="/signup"
                 className="rounded-md bg-emerald-500 px-8 py-3 text-lg font-semibold text-white shadow-sm hover:bg-emerald-400 transition-colors"
               >
                 Get started
               </Link>
               <Link
-                to="/demo"
+                href="/demo"
                 className="text-base font-semibold leading-6 text-white flex items-center hover:text-emerald-400 transition-colors"
               >
                 Request a demo <span aria-hidden="true" className="ml-1">→</span>
@@ -971,7 +971,7 @@ export default function FeaturesPage() {
                     Close
                   </button>
                   <Link
-                    to={selectedFeature.learnMoreLink || '/docs'}
+                    href={selectedFeature.learnMoreLink || '/docs'}
                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-emerald-500 border border-transparent rounded-md hover:bg-emerald-600 focus:outline-none"
                   >
                     Learn More

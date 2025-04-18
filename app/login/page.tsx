@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { updateUserLogin, ensureUserExists } from '@/lib/userService';
 import { useAuthStore } from '@/lib/store/auth';
 import { useRouter } from 'next/navigation';
@@ -11,17 +11,18 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useRouter();
   const router = useRouter();
   const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const { login } = useAuthStore();
 
   useEffect(() => {
-    // Check for message from location state
-    if (location.state?.message) {
-      setMessage(location.state.message);
+    // Check for message from URL search params
+    const searchParams = new URLSearchParams(window.location.search);
+    const messageParam = searchParams.get('message');
+    if (messageParam) {
+      setMessage(messageParam);
     }
-  }, [location]);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

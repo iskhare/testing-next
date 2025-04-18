@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { signUp } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { ensureUserExists, updateUserLogin } from '@/lib/userService';
 
 export default function Signup() {
@@ -11,7 +11,7 @@ export default function Signup() {
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useRouter();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +20,14 @@ export default function Signup() {
 
     try {
       // Step 1: Create Supabase Auth account
-      const { data, error } = await signUp(email, password, name);
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: name },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
       
       if (error) throw error;
 
@@ -47,7 +54,7 @@ export default function Signup() {
       }
 
       // Navigate to dashboard regardless
-      navigate('/dashboard');
+      router.push('/dashboard');
     } catch (err: any) {
       console.error('Signup error:', err);
       setError(err.message || "An error occurred during signup.");
